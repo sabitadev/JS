@@ -1,0 +1,21 @@
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script type="module" src="./js/app.js"></script> 
+<html>
+    <body>
+        <h1>ToDo List</h1>
+        <div>
+            <input type="text" class = "addToDoItem" placeholder="Add new item">
+        </div>
+        <div id="container">
+            <div class="column left">
+                <button class="removeItem button">Remove Item</button>
+                <button class="selectAll button">Select All</button>
+                <button class="markCompleted button">Completed Item</button>
+            </div>
+            <div class="column right">
+                <span class="label">Items To Do</span>
+                <ol class="todolist"></ol>   
+            </div>
+        </div>          
+    </body> 
+</html>

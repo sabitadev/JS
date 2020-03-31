@@ -1,3 +1,2 @@
 
-toDoListView.addAllEventListener();
-toDoListController .initToDoItems();
+toDoListController .init();

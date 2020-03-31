@@ -1,14 +1,28 @@
 var toDoListController = (function(){
     'use strict';
-    var initToDoItems = function()
+    var toDoListModelObj = new toDoListModel();
+    var toDoListViewObj = new toDoListView();
+
+    var init = function()
     {
-          var toDoListArr = toDoListModel.initData();
-          console.log(toDoListArr[0]);
-          for (var item = 0; item <toDoListArr.length; item++)
-          {
-                toDoListView.addListItemElem(toDoListArr[item]);
-    
-          }  
+          addAllEventListener();
+          toDoListViewObj.initToDoItems();
+
+    }
+
+    var addAllEventListener = function(){
+        //add To Do Item
+        toDoListViewObj.addItemElement.addEventListener('keypress', addToDoItem);
+
+        //delete To Do Item
+        toDoListViewObj.removeItemElement.addEventListener('click' , deleteToDoSelectedItems)
+
+        //selectAll To Do Item
+        toDoListViewObj.selectAllElement.addEventListener('click' ,selectAllItems)
+
+        //mark Completed To Do Item
+        toDoListViewObj.completeElement.addEventListener('click' ,completeItem)
+
     }
 
     var addToDoItem = function(event)
@@ -16,79 +30,29 @@ var toDoListController = (function(){
 
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if (keycode == '13') {
-        var toDoItemArr = document.getElementsByClassName("addToDoItem");
-        var toDoItem =toDoItemArr[0].value;
-                
-        if(!toDoItem)
-            {
-                return;
-            }
-            toDoListView.addListItemElem(toDoItem); 
+            var toDoItem = toDoListViewObj.getToDoItemText();
+            toDoListViewObj.addListItemElem(toDoItem );
+            toDoListModelObj.addToDoItem(toDoItem);
+            toDoListModelObj.getToDoItemList();
         }
-    }
-
-    var deleteToDoItem = function(event){
-        var element = event.target;
-        element.parentNode.remove();
     }
     
     var deleteToDoSelectedItems = function(event)
-    {
-            var ul = document.querySelector(".todolist");
-            var liarr = document.getElementsByClassName ("toDoItem");
-            for(var i = 0 ; i < liarr.length  ; i += 1)
-            { 
-               console.log("array length"+ liarr.length );
-               var liItem = liarr[i];
-               var checkbox = liItem .getElementsByTagName("input");
-               if(checkbox[0].checked)
-               {
-                   console.log("selected removed item"+ i);
-                   ul.removeChild(liItem);
-                   i -= 1;
-               }
-            }
+    { 
+        toDoListViewObj.deleteToDoSelectedItemElems();
     }
 
     var selectAllItems = function(event)
     {
-            var ul = document.querySelector(".todolist");
-            var liarr = document.getElementsByClassName ("toDoItem");
-            for(var i = 0 ; i < liarr.length  ; i += 1)
-            { 
-               console.log("array length"+ liarr.length );
-               var liItem = liarr[i];
-               var checkbox = liItem .getElementsByTagName("input");
-               if(!checkbox[0].checked)
-               {
-                   console.log("selected removed item"+ i);
-                   checkbox[0].checked = true
-               }
-            }
+        toDoListViewObj.selectAllItemsElems();
     }
 
     var completeItem = function(){
-        var ul = document.querySelector("ol");
-        var liarr = document.getElementsByTagName ("li")
-        for(var i = 0 ; i < liarr.length ; i +=1)
-        {
-           var liItem = liarr[i];
-           var checkbox = liItem .getElementsByTagName("input");
-           if(checkbox[0].checked)
-           {
-               console.log("mark completed check box"+ i);
-               checkbox[0].disabled = true;
-           }
-        }
+        toDoListViewObj.completeItemElems();
     }
     
     return {
-        initToDoItems : initToDoItems ,
-        addToDoItem : addToDoItem ,
-        deleteToDoItem : deleteToDoItem ,
-        deleteToDoSelectedItems : deleteToDoSelectedItems,
-        completeItem : completeItem,
-        selectAllItems : selectAllItems
+        init : init
     }
 })()
 

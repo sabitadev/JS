@@ -3,6 +3,7 @@ var ToDoListView = (function(){
     var toDoListModel  = new ToDoListModel() ;
     var ul = document.querySelector(".todolist");
     var toDoItemArr = document.getElementsByClassName("addToDoItem");
+    ToDoBaseView.call(this);
     
     events.on("New" ,function(toDoItemText){
         var toDoItem = toDoListModel.addToDoItemData(toDoItemText)
@@ -16,6 +17,7 @@ var ToDoListView = (function(){
     
     var init = function()
     {
+        this.init();
         var toDoListArr = toDoListModel.getToDoItemList();
         for (var index = 0; index<toDoListArr.length; index++)
         {
@@ -64,3 +66,5 @@ var ToDoListView = (function(){
    
 })();
 
+
+ToDoListView.prototype = Object.create(ToDoBaseView.prototype);

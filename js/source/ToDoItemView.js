@@ -1,45 +1,63 @@
-var ToDoItemView = (function(){
-    
-    var template = document.querySelector('.todoitemTemplate')
+var toDoItemView = function(toDoListModelObj){
+    this.template = document.querySelector('.todoitemTemplate')
     document.createElement('template'); 
-    var toDoListModel  = new ToDoListModel() ;
-    var toDoListArr = toDoListModel.getToDoItemList();
-    var ul = document.querySelector(".todolist");
+    this.ul = document.querySelector(".todolist");
+    this.toDoListModelObj = toDoListModelObj
 
-    var init = function(toDoItem){   
-            console.log("Inside render")
-            var li = template.content.cloneNode(true);
-            var itemTextElm  = li.querySelector('.toDoItemText');  
-            itemTextElm.textContent = toDoItem.name;
-            var deleteButtonElem= li.querySelector('.deleteItem');  
-            deleteButtonElem.addEventListener('click',deleteToDoItemListener);
-            var todoItemcheckElem= li.querySelector('.todoItemcheck'); 
-            todoItemcheckElem.checked = toDoItem.isChecked;
-            todoItemcheckElem.disabled = toDoItem.isDisabled;
-            todoItemcheckElem.addEventListener('change',itemCheckedListener);
-            ul.appendChild(li); 
-    }
-
-    var deleteToDoItemListener = function(event){
-        var element = event.target;
-        var parent =  closest(element  ,".toDoItem");
-        parent.remove();
-    }
-
-    var itemCheckedListener= function(event){
+    this.deleteToDoItemListener = function(event){
         var element = event.target;
         var parent =  closest(element  ,".toDoItem");
         var itemTextElm  = parent.querySelector('.toDoItemText');  
-        console.log(itemTextElm.textContent);
-        //toDoItemArr = this.toDoItemArr.slice();
-        // toDoItemArr[id].isChecked = !toDoItemArr[id].isChecked
-        // this.setState({toDoItemArr : toDoItemArr})   
+        var id = itemTextElm.getAttribute("id")
+        parent.remove();
+        this.toDoListModelObj.deleteToDoItem(id);  
     }
 
-    return {
-       init : init
+    this.itemCheckedListener= function(event){
+        var element = event.target;
+        var parent =  closest(element  ,".toDoItem");
+        var itemTextElm  = parent.querySelector('.toDoItemText');  
+        var todoItemcheckElem  = parent.querySelector('.todoItemcheck');  
+        console.log(itemTextElm.textContent);
+        var id = itemTextElm.getAttribute("id")
+        this.toDoListModelObj.updateToDoItem(id,todoItemcheckElem.checked)
     }
-})()
+
+}
+toDoItemView.prototype = Object.create(toDoBaseView.prototype);
+toDoItemView.prototype.constructor = toDoItemView ;
+toDoItemView.prototype.init = function(toDoItem)
+{
+    console.log("Inside init")
+    var li = this.template.content.cloneNode(true);
+    var itemTextElm  = li.querySelector('.toDoItemText');  
+    itemTextElm.textContent = toDoItem.name;
+    itemTextElm.setAttribute("id", toDoItem.id);
+    var deleteButtonElem= li.querySelector('.deleteItem');  
+    deleteButtonElem.addEventListener('click',this.deleteToDoItemListener.bind(this));
+    var todoItemcheckElem= li.querySelector('.todoItemcheck'); 
+    todoItemcheckElem.checked = toDoItem.isChecked;
+    todoItemcheckElem.disabled = toDoItem.isDisabled;
+    todoItemcheckElem.addEventListener('change',this.itemCheckedListener.bind(this));
+    this.ul.appendChild(li); 
+}
+toDoItemView.prototype.render = function(toDoItem)
+{
+    console.log("Inside render")
+    var element  = document.getElementById(toDoItem.id);  
+    var li =  closest(element ,".toDoItem");
+    var itemTextElm  = li.querySelector('.toDoItemText');
+    itemTextElm.textContent = toDoItem.name;            
+    var todoItemcheckElem= li.querySelector('.todoItemcheck'); 
+    todoItemcheckElem.checked = toDoItem.isChecked;
+    todoItemcheckElem.disabled = toDoItem.isDisabled;
+}
+toDoItemView.prototype.destroy = function(toDoItem)
+{
+    var element = document.getElementById(toDoItem.id);  
+    var parent =  closest(element  ,".toDoItem");
+    parent.remove();
+}
 
 
 

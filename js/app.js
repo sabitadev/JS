@@ -1,20 +1,7 @@
+var toDoListModelObj = new toDoListModel()
+var toDoListViewObj = new toDoListView(toDoListModelObj)
+var toDoActionViewObj = new toDoActionView(toDoListModelObj)
+toDoListModelObj.initToDoItemData();
+toDoActionViewObj.init()
 
-var closest = function(targetElement ,selector)
-{
-    while (targetElement) {
-        if (targetElement.matches(selector)) {
-            return targetElement;
-        }
-        targetElement = targetElement.parentNode
-    }
-}
-var  find  = function (targetElement ,selector)
-{
-    while (targetElement) {
-        if (targetElement.matches(selector)) {
-            return targetElement;
-        }
-        targetElement = targetElement.querySelector(selector);
-    }
-}
 

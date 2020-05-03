@@ -1,24 +1,21 @@
-var ToDoBaseView = function()
+var toDoBaseView = function()
 {
-   init = function()
-   {
-      alert("hi")
-   }
-   render = function()
-   {
 
-   }
-   destroy = function()
-   {
-       
-   }
 }
 
-ToDoBaseView.prototype =
+toDoBaseView.prototype =
 {
-   init : function()
+   init :function()
    {
-      alert("hi")
+      
+   },
+   render :function()
+   {
+
+   },
+   destroy : function()
+   {
+       
    }
 }
 

@@ -1,70 +1,33 @@
-var ToDoListView = (function(){
-    
-    var toDoListModel  = new ToDoListModel() ;
-    var ul = document.querySelector(".todolist");
-    var toDoItemArr = document.getElementsByClassName("addToDoItem");
-    ToDoBaseView.call(this);
-    
-    events.on("New" ,function(toDoItemText){
-        var toDoItem = toDoListModel.addToDoItemData(toDoItemText)
-        ToDoItemView.init(toDoItem);
-       }
-    );
-    events.on("update" ,function(status){
-        render(status);
-    }    
-    );
-    
-    var init = function()
+var toDoListView = function(toDoListModelObj){
+    this.ul = document.querySelector(".todolist");
+    this.toDoListModelObj = toDoListModelObj
+    this.toDoItemViewObj  = new toDoItemView(toDoListModelObj);
+    toDoBaseView.call(this)
+    events.on(eventsName.NEW ,this.init.bind(this))
+    events.on(eventsName.DELETE ,this.destroy.bind(this))
+    events.on(eventsName.UPDATE ,this.render.bind(this))
+} 
+toDoListView.prototype = Object.create(toDoBaseView.prototype);
+toDoListView.prototype.constructor = toDoListView ;
+toDoListView.prototype.init = function(toDoItem)
+{
+    this.toDoItemViewObj.init(toDoItem);
+}
+
+toDoListView.prototype.render = function(toDoItems)
+{
+    for(var index = 0 ; index<toDoItems.length  ;index++ )
     {
-        this.init();
-        var toDoListArr = toDoListModel.getToDoItemList();
-        for (var index = 0; index<toDoListArr.length; index++)
-        {
-            ToDoItemView.init(toDoListArr[index]);
-        }  
-        
+        this.toDoItemViewObj.render(toDoItems[index]);
     }
+}
 
-    var render = function(status){
-        var toDoListArr = toDoListModel.getToDoItemList();
-        
-        for(var i = 0 ; i < toDoListArr.length  ; i += 1)
-        { 
-               if(toDoListArr[i].isChecked && status == 'Delete')
-               {
-                   console.log("selected removed item"+ i);
-                   toDoListModel.deleteToDoItemData(toDoListArr[i])
-               }
-               else
-               {
-                   if (toDoListArr[i].isChecked && status == 'Complete')
-                   {
-                    var updateToDoItem  = toDoListArr[i];
-                    updateToDoItem.isDisabled = true
-                    toDoListModel.updateToDoItemData(toDoListArr[i],updateToDoItem)
-                   }
-                   else{
-                       if(status == 'Select')
-                       {
-                        var updateToDoItem  = toDoListArr[i];
-                        updateToDoItem.isChecked = true
-                        toDoListModel.updateToDoItemData(toDoListArr[i],updateToDoItem)
-                       }
-                   }
-               }
-        } 
-        destroy()
-        init()
-        
+toDoListView.prototype.destroy = function(removeToDoItems)
+{
+
+  for(var index = 0 ;index<removeToDoItems.length  ;index++ )
+    {
+        this.toDoItemViewObj.destroy(removeToDoItems[index]);
     }
+}
 
-    var destroy = function(){
-        while(ul.firstChild) ul.removeChild(ul.firstChild);
-    }
-    init();
-   
-})();
-
-
-ToDoListView.prototype = Object.create(ToDoBaseView.prototype);
